@@ -11,11 +11,11 @@ namespace RayCasingKkepProject
         public float X { get; private set; }
         public float Y { get; private set; }
         public float Angle { get; private set; } // Угол направления взгляда
-        public float Z { get; private set; } // Высота игрока
+        //public float Z { get; private set; } // Высота игрока
         public float Pitch { get; private set; } // Поворот камеры вверх/вниз
-        private const float Gravity = 0.1f; // Гравитация
-        private const float JumpStrength = 1.5f; // Сила прыжка
-        private bool isJumping = false; //Прыжок?
+        //private const float Gravity = 0.1f; // Гравитация
+        //private const float JumpStrength = 1.5f; // Сила прыжка
+        //private bool isJumping = false; //Прыжок?
 
 
         private const float MoveSpeed = 0.1f; // Скорость движения
@@ -26,39 +26,39 @@ namespace RayCasingKkepProject
         {
             X = startX;
             Y = startY;
-            Z = 0;
+            //Z = 0;
             Angle = startAngle;
             Pitch = 0;
         }
 
-        public void Jump()
-        {
-            if (Z == 0) // Прыгать можно только с земли
-            {
-                isJumping = true;
-                Z += JumpStrength;
-            }
-        }
+        //public void Jump()
+        //{
+        //    if (Z == 0) // Прыгать можно только с земли
+        //    {
+        //        isJumping = true;
+        //        Z += JumpStrength;
+        //    }
+        //}
 
-        public void Update()
-        {
-            if (isJumping)
-            {
-                Z -= Gravity; // Гравитация опускает игрока
-                if (Z <= 0)
-                {
-                    Z = 0;
-                    isJumping = false;
-                }
-
-                int floorHeight = Map.GetHeight((int)X, (int)Y);
-                if (Z < floorHeight)
-                {
-                    Z += 0.1f; // Медленный подъем
-                }
-
-            }
-        }
+        //public void Update()
+        //{
+        //    if (isJumping)
+        //    {
+        //        Z -= Gravity; // Гравитация опускает игрока
+        //        if (Z <= 0)
+        //        {
+        //            Z = 0;
+        //            isJumping = false;
+        //        }
+        //
+        //        int floorHeight = Map.GetHeight((int)X, (int)Y);
+        //        if (Z < floorHeight)
+        //        {
+        //            Z += 0.1f; // Медленный подъем
+        //        }
+        //
+        //    }
+        //}
 
         public void StrafeLeft()
         {

@@ -66,7 +66,6 @@ namespace RayCasingKkepProject
             Bitmap brickCopy = new Bitmap(TextureManager.BrickTexture);
             Bitmap doorCopy = new Bitmap(TextureManager.DoorTexture);
 
-            // Загружаем данные текстур в массивы (чтобы не использовать Bitmap в потоках)
             byte[] brickData = GetTextureData(TextureManager.BrickTexture);
             byte[] doorData = GetTextureData(TextureManager.DoorTexture);
             int brickWidth = TextureManager.BrickTexture.Width;
