@@ -95,12 +95,6 @@ namespace RayCasingKkepProject
 
 
 
-        private Bitmap GetWallTexture(int hitX, int hitY)
-        {
-            return Map.IsDoor(hitX, hitY) && !Map.IsDoorOpen(hitX, hitY)
-                ? TextureManager.DoorTexture
-                : TextureManager.BrickTexture;
-        }
 
         private float GetWallTextureX(int hitX, int hitY, float startX, float startY, float angle, float distance)
         {
