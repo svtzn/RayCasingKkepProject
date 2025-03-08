@@ -48,15 +48,45 @@ namespace RayCasingKkepProject
 
         private void DrawFloorAndCeiling(int horizon)
         {
+            // Задаем максимальное расстояние для затемнения (подбирай по вкусу)
+            float maxDistance = 15f;
+            // Цвета для потолка и пола (базовые)
+            Color ceilingColor = Color.FromArgb(100, 100, 100);
+            Color floorColor = Color.FromArgb(139, 69, 19);
+
+            // Проходим по всем строкам экрана
             for (int y = 0; y < screenHeight; y++)
             {
-                int color = y < horizon
-                    ? Color.FromArgb(100, 100, 100).ToArgb()
-                    : Color.FromArgb(139, 69, 19).ToArgb();
+                // Будем вычислять затемнение отдельно для потолка и пола
+                Color baseColor;
+                float rowDistance;
+                if (y < horizon)
+                {
+                    // Потолок: чем ближе к краю горизонта сверху, тем дальше (и темнее)
+                    rowDistance = (screenHeight / 2f) / (horizon - y);
+                    baseColor = ceilingColor;
+                }
+                else
+                {
+                    // Пол: чем дальше от горизонта вниз, тем дальше (и темнее)
+                    // Добавляем +1 чтобы не было деления на 0
+                    rowDistance = (screenHeight / 2f) / (y - horizon + 1);
+                    baseColor = floorColor;
+                }
 
+                // Вычисляем коэффициент затемнения
+                float shade = 1.0f - Math.Min(rowDistance / maxDistance, 1.0f);
+
+                // Применяем затемнение к базовому цвету
+                int r = (int)(baseColor.R * shade);
+                int g = (int)(baseColor.G * shade);
+                int b = (int)(baseColor.B * shade);
+                Color finalColor = Color.FromArgb(255, r, g, b);
+
+                // Заполняем строку этим цветом
                 for (int x = 0; x < screenWidth; x++)
                 {
-                    backBuffer[y * screenWidth + x] = color;
+                    backBuffer[y * screenWidth + x] = finalColor.ToArgb();
                 }
             }
         }
@@ -148,15 +178,30 @@ namespace RayCasingKkepProject
             int textureX = (int)(wallX * textureWidth);
             textureX = Utils.Clamp(textureX, 0, textureWidth - 1);
 
+            // Задаем максимальное расстояние для затемнения
+            float maxDistance = 15f;
+
             for (int y = startY; y < endY; y++)
             {
                 float texPosY = ((y - startY) / (float)lineHeight) * textureHeight;
-                int textureY = (int)texPosY % textureHeight;
+                int textureY = Math.Max(0, Math.Min(textureHeight - 1, (int)texPosY));
 
                 Color color = GetPixelFromTextureData(textureData, textureX, textureY, textureWidth);
+
+                // Вычисляем коэффициент затемнения (от 1 до 0)
+                float shade = 1.0f - Math.Min(distance / maxDistance, 1.0f);
+
+                // Применяем затемнение к цвету:
+                int r = (int)(color.R * shade);
+                int g = (int)(color.G * shade);
+                int b = (int)(color.B * shade);
+
+                color = Color.FromArgb(255, r, g, b);
+
                 backBuffer[y * screenWidth + x] = color.ToArgb();
             }
         }
+
 
 
         private static Dictionary<Bitmap, byte[]> textureCache = new Dictionary<Bitmap, byte[]>();
