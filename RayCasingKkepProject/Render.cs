@@ -114,17 +114,34 @@ namespace RayCasingKkepProject
         {
             float rayDirX = (float)Math.Cos(angle);
             float rayDirY = (float)Math.Sin(angle);
+            float wallX;
 
-            float wallX = Math.Abs((startX + rayDirX * distance) - hitX) > 0.01f
-                ? startY + rayDirY * (hitX - startX) / rayDirX
-                : startX + rayDirX * (hitY - startY) / rayDirY;
+            // Определяем, какая сторона стены была поражена:
+            // Если абсолютное значение горизонтальной компоненты направления больше вертикальной,
+            // значит, мы столкнулись с вертикальной стеной.
+            if (Math.Abs(rayDirX) > Math.Abs(rayDirY))
+            {
+                // вертикальная стена – используем координату y
+                wallX = startY + distance * rayDirY;
+            }
+            else
+            {
+                // горизонтальная стена – используем координату x
+                wallX = startX + distance * rayDirX;
+            }
 
+            // Возвращаем дробную часть (это и есть позиция на текстуре)
             return wallX - (float)Math.Floor(wallX);
         }
 
+
         private void DrawTexturedStrip(int x, float distance, byte[] textureData, int textureWidth, int textureHeight, int horizon, float wallX)
         {
-            int lineHeight = (int)(screenHeight / distance);
+            // Используем корректное расстояние до проекционной плоскости для устранения эффекта рыбьего глаза:
+            float fov = (float)(60 * Math.PI / 180);
+            float projectionPlaneDistance = (screenWidth / 2f) / (float)Math.Tan(fov / 2f);
+            int lineHeight = (int)(projectionPlaneDistance / distance);
+
             int startY = Math.Max(0, horizon - lineHeight / 2);
             int endY = Math.Min(screenHeight - 1, startY + lineHeight);
 
