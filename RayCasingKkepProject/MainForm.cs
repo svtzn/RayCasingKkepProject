@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RayCasingKkepProject
@@ -28,6 +20,10 @@ namespace RayCasingKkepProject
 
                 player = new Player(3, 3, 0); // Начальная позиция
                 renderer = new Renderer(Width, Height, player);
+
+                // Загружаем первую карту
+                MapManager.LoadMap(0);
+
                 gameLoop = new GameLoop(UpdateFrame);
                 gameLoop.Start();
             }
@@ -36,7 +32,6 @@ namespace RayCasingKkepProject
                 MessageBox.Show($"Ошибка: {ex.Message}");
                 Environment.Exit(1);
             }
-
         }
 
         private void UpdateFrame()
@@ -52,8 +47,8 @@ namespace RayCasingKkepProject
             {
                 case Keys.W: player.MoveForward(); break;
                 case Keys.S: player.MoveBackward(); break;
-                case Keys.A: player.StrafeLeft(); break;  //стрейф влево
-                case Keys.D: player.StrafeRight(); break; //стрейф вправо
+                case Keys.A: player.StrafeLeft(); break;  // страйф влево
+                case Keys.D: player.StrafeRight(); break; // страйф вправо
                 case Keys.Left: player.RotateLeft(); break; // поворот камеры влево
                 case Keys.Right: player.RotateRight(); break; // поворот камеры вправо
                 case Keys.Up: player.LookUp(); break;
@@ -61,6 +56,5 @@ namespace RayCasingKkepProject
                 case Keys.E: player.Interact(); break;
             }
         }
-
     }
 }

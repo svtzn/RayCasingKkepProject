@@ -109,9 +109,10 @@ namespace RayCasingKkepProject
                 float rayAngle = player.Angle - 0.5f + (x / (float)screenWidth);
                 var (distance, hitX, hitY, isDoor) = Raycaster.CastRay(player.X, player.Y, rayAngle, player);
                 bool isDoorOpen = isDoor && Map.IsDoorOpen(hitX, hitY);
+                bool isPortal = Map.IsPortal(hitX, hitY);
+                byte[] textureData = isPortal ? GetTextureData(TextureManager.PortalTexture) : (isDoor ? doorData : brickData);
 
 
-                byte[] textureData = isDoor ? doorData : brickData;
                 int textureWidth = isDoor ? doorWidth : brickWidth;
                 int textureHeight = isDoor ? doorHeight : brickHeight;
 
@@ -255,8 +256,22 @@ namespace RayCasingKkepProject
                             SetPixel(x * cellSize + i, y * cellSize + j, color);
                         }
                     }
+                    Color portalColor = Color.Purple;
+                    if (Map.IsPortal(x, y))
+                    {
+                        for (int i = 0; i < cellSize; i++)
+                        {
+                            for (int j = 0; j < cellSize; j++)
+                            {
+                                SetPixel(x * cellSize + i, y * cellSize + j, portalColor);
+                            }
+                        }
+                    }
+
                 }
             }
+
+            
 
             // Отображаем игрока
             for (int i = 0; i < 5; i++)

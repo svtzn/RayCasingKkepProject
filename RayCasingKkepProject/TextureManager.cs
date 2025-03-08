@@ -6,6 +6,8 @@ namespace RayCasingKkepProject
     {
         public static Bitmap BrickTexture { get; }
         public static Bitmap DoorTexture { get; }
+        public static Bitmap PortalTexture { get; }
+        
 
         static TextureManager()
         {
@@ -15,6 +17,7 @@ namespace RayCasingKkepProject
 
             BrickTexture = new Bitmap("W3d_protoredbrick1.png");
             DoorTexture = new Bitmap("W3d_finalgrayflag.png");
+            PortalTexture = new Bitmap("W3d_finalgrayflag.png");
         }
     }
 }

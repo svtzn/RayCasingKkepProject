@@ -49,6 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameLoop.cs" />
+    <Compile Include="LocationMenu .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LocationMenu .Designer.cs">
+      <DependentUpon>LocationMenu .cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +62,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Map.cs" />
+    <Compile Include="MapManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
