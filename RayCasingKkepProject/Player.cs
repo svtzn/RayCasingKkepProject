@@ -66,7 +66,7 @@ namespace RayCasingKkepProject
             float newX = X + (float)Math.Sin(Angle) * strafeSpeed;
             float newY = Y - (float)Math.Cos(Angle) * strafeSpeed;
 
-            if (!Map.IsWall((int)newX, (int)newY)) // Проверка на стену
+            if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
             {
                 X = newX;
                 Y = newY;
@@ -79,7 +79,7 @@ namespace RayCasingKkepProject
             float newX = X - (float)Math.Sin(Angle) * strafeSpeed;
             float newY = Y + (float)Math.Cos(Angle) * strafeSpeed;
 
-            if (!Map.IsWall((int)newX, (int)newY))
+            if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
             {
                 X = newX;
                 Y = newY;
@@ -108,13 +108,6 @@ namespace RayCasingKkepProject
             int mapY = (int)newY;
 
             if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
-            {
-                X = newX;
-                Y = newY;
-            }
-
-
-            if (!Map.IsWall((int)newX, (int)newY))
             {
                 X = newX;
                 Y = newY;
