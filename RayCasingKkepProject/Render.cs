@@ -156,21 +156,40 @@ namespace RayCasingKkepProject
             );
         }
 
+        private void SetPixel(int x, int y, Color color)
+        {
+            if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
+                backBuffer[y * screenWidth + x] = color.ToArgb();
+        }
+
+
         private void DrawMinimap()
         {
-            using (var g = Graphics.FromImage(bmp))
+            int cellSize = 10;
+            for (int y = 0; y < Map.Height; y++)
             {
-                int cellSize = 10;
-                for (int y = 0; y < Map.Height; y++)
+                for (int x = 0; x < Map.Width; x++)
                 {
-                    for (int x = 0; x < Map.Width; x++)
+                    Color color = Map.IsWall(x, y) ? Color.White : Color.Black;
+                    for (int i = 0; i < cellSize; i++)
                     {
-                        var brush = Map.IsWall(x, y) ? Brushes.White : Brushes.Black;
-                        g.FillRectangle(brush, x * cellSize, y * cellSize, cellSize, cellSize);
+                        for (int j = 0; j < cellSize; j++)
+                        {
+                            SetPixel(x * cellSize + i, y * cellSize + j, color);
+                        }
                     }
                 }
-                g.FillRectangle(Brushes.Red, (int)(player.X * 10), (int)(player.Y * 10), 5, 5);
+            }
+
+            // Отображаем игрока
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    SetPixel((int)(player.X * 10) + i, (int)(player.Y * 10) + j, Color.Red);
+                }
             }
         }
+
     }
 }
