@@ -77,16 +77,31 @@ namespace RayCasingKkepProject
             Parallel.For(0, screenWidth, x =>
             {
                 float rayAngle = player.Angle - 0.5f + (x / (float)screenWidth);
-                var (distance, hitX, hitY) = Raycaster.CastRay(player.X, player.Y, rayAngle, player);
+                var (distance, hitX, hitY, isDoor) = Raycaster.CastRay(player.X, player.Y, rayAngle, player);
+                bool isDoorOpen = isDoor && Map.IsDoorOpen(hitX, hitY);
 
-                bool isDoor = Map.IsDoor(hitX, hitY) && !Map.IsDoorOpen(hitX, hitY);
+
                 byte[] textureData = isDoor ? doorData : brickData;
                 int textureWidth = isDoor ? doorWidth : brickWidth;
                 int textureHeight = isDoor ? doorHeight : brickHeight;
 
+                //if (isDoorOpen)
+                //{
+                //    textureData = brickData;
+                //    textureWidth = brickWidth;
+                //    textureHeight = brickHeight;
+                //}
+
                 float wallX = GetWallTextureX(hitX, hitY, player.X, player.Y, rayAngle, distance);
+
+                if (isDoor && !isDoorOpen)
+                {
+                    wallX = 0.3f + wallX * 0.4f; // Сжимаем текстуру двери, чтобы она выглядела тоньше
+                }
+
                 DrawTexturedStrip(x, distance, textureData, textureWidth, textureHeight, horizon, wallX);
             });
+
 
             brickCopy.Dispose();
             doorCopy.Dispose();
