@@ -1,70 +1,98 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayCasingKkepProject
 {
     public class Raycaster
     {
-        private const int MaxDepth = 40; // Максимальная дальность лучей
+        private const float MAX_DISTANCE = 40f;
 
-        public static (float distance, int hitX, int hitY, bool isDoor) CastRay(float startX, float startY, float angle, Player player)
+        /// <summary>
+        /// Возвращаем:
+        /// distance — расстояние до стены
+        /// hitX, hitY — координаты ячейки карты, в которую упёрлись
+        /// isDoor — является ли эта ячейка дверью
+        /// side — 0, если пересекли вертикальную сторону (OX), 1 — горизонтальную (OY)
+        /// </summary>
+        public static (float distance, int hitX, int hitY, bool isDoor, int side)
+            CastRay(float startX, float startY, float angle, Player player)
         {
-            float rayX = startX;
-            float rayY = startY;
-            float stepX = (float)Math.Cos(angle) * 0.3f;
-            float stepY = (float)Math.Sin(angle) * 0.3f;
+            float rayDirX = (float)Math.Cos(angle);
+            float rayDirY = (float)Math.Sin(angle);
 
-            // Задаем толщину двери (например, 40% ячейки)
-            float doorThickness = 0.4f;
-            float doorMin = (1 - doorThickness) / 2f; // например, 0.3
-            float doorMax = doorMin + doorThickness;    // например, 0.7
+            int mapX = (int)startX;
+            int mapY = (int)startY;
 
-            for (int i = 0; i < MaxDepth; i++)
+            // Длина луча от одной x-границы до следующей
+            float deltaDistX = (rayDirX == 0) ? 1e30f : Math.Abs(1f / rayDirX);
+            // Аналогично по y
+            float deltaDistY = (rayDirY == 0) ? 1e30f : Math.Abs(1f / rayDirY);
+
+            // Определяем направление шага по x и y
+            int stepX = (rayDirX < 0) ? -1 : 1;
+            int stepY = (rayDirY < 0) ? -1 : 1;
+
+            // sideDistX / sideDistY — расстояние от начала луча до ближайшей границы по x или y
+            float sideDistX, sideDistY;
+
+            if (rayDirX < 0)
+                sideDistX = (startX - mapX) * deltaDistX;
+            else
+                sideDistX = (mapX + 1.0f - startX) * deltaDistX;
+
+            if (rayDirY < 0)
+                sideDistY = (startY - mapY) * deltaDistY;
+            else
+                sideDistY = (mapY + 1.0f - startY) * deltaDistY;
+
+            // side=0 => пересекли вертикальную границу, side=1 => горизонтальную
+            int side = 0;
+
+            // Выполняем DDA
+            for (int i = 0; i < 200; i++)
             {
-                rayX += stepX;
-                rayY += stepY;
+                // Проверяем, идём ли мы по x или по y
+                if (sideDistX < sideDistY)
+                {
+                    sideDistX += deltaDistX;
+                    mapX += stepX;
+                    side = 0;  // вертикальная граница
+                }
+                else
+                {
+                    sideDistY += deltaDistY;
+                    mapY += stepY;
+                    side = 1;  // горизонтальная граница
+                }
 
-                int mapX = (int)rayX;
-                int mapY = (int)rayY;
+                // Если вышли за границы или достигли препятствия
+                if (mapX < 0 || mapX >= Map.Width || mapY < 0 || mapY >= Map.Height)
+                {
+                    // Считаем, что ничего не нашли (макс. расстояние)
+                    return (MAX_DISTANCE, 0, 0, false, side);
+                }
 
                 bool isDoor = Map.IsDoor(mapX, mapY);
                 bool isDoorOpen = isDoor && Map.IsDoorOpen(mapX, mapY);
 
-                // Если дверь открыта, пропускаем её (как если бы её не было)
-                if (isDoorOpen)
+                if (!isDoorOpen && Map.IsObstacle(mapX, mapY))
                 {
-                    continue;
-                }
-
-                if (Map.IsObstacle(mapX, mapY))
-                {
-                    if (isDoor)
+                    // Найдена стена или закрытая дверь
+                    float dist;
+                    if (side == 0)
                     {
-                        // Определяем, по какому измерению производить проверку.
-                        // Если угол больше горизонтального – берем разницу по X, иначе по Y.
-                        float absRayDirX = Math.Abs((float)Math.Cos(angle));
-                        float absRayDirY = Math.Abs((float)Math.Sin(angle));
-                        float hitPos = (absRayDirX > absRayDirY) ? (rayX - mapX) : (rayY - mapY);
-
-                        // Если попадание вне центральной области двери, пропускаем (продолжаем искать)
-                        if (hitPos < doorMin || hitPos > doorMax)
-                        {
-                            continue;
-                        }
+                        // sideDistX уже перешёл к следующему, значит реальное расстояние:
+                        dist = sideDistX - deltaDistX;
                     }
-
-                    float distance = (float)Math.Sqrt((rayX - startX) * (rayX - startX) +
-                                                        (rayY - startY) * (rayY - startY));
-                    // Корректируем расстояние, учитывая угол отклонения
-                    return (distance * (float)Math.Cos(angle - player.Angle), mapX, mapY, isDoor);
+                    else
+                    {
+                        dist = sideDistY - deltaDistY;
+                    }
+                    return (dist, mapX, mapY, isDoor, side);
                 }
             }
-            return (MaxDepth, 0, 0, false);
+
+            // Если ничего не нашли
+            return (MAX_DISTANCE, 0, 0, false, side);
         }
-
-
     }
 }
