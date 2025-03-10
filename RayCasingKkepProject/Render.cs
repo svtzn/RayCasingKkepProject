@@ -176,10 +176,17 @@ namespace RayCasingKkepProject
                 {
                     // Относительная позиция (0..1) по вертикали
                     float relY = (yPix - projTop) / columnHeight;
-                    // Выбираем пиксель из текстуры
-                    int texX = (int)(wallX * texW) % texW;
-                    int texY = (int)(relY * texH) % texH;
 
+                    // Координаты текстуры (без повторения, просто зажимаем)
+                    int texX = (int)(wallX * texW);
+                    if (texX >= texW) texX = texW - 1;
+                    if (texX < 0) texX = 0;
+
+                    int texY = (int)(relY * texH);
+                    if (texY >= texH) texY = texH - 1;
+                    if (texY < 0) texY = 0;
+
+                    // Берём пиксель из текстуры
                     Color color = GetPixelFromTextureData(texData, texX, texY, texW);
 
                     // Применяем затемнение
