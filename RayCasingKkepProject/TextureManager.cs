@@ -19,8 +19,8 @@ namespace RayCasingKkepProject
             // Ниже пример для двух локаций. Добавьте нужное количество по аналогии.
             switch (location)
             {
+                // 1st location
                 case 0:
-                    // Локация 0 – набор текстур по умолчанию
                     if (!File.Exists("ceil3_3.png") ||
                         !File.Exists("Door.png") ||
                         !File.Exists("W3d_finalgrayflag.png") ||
@@ -36,8 +36,8 @@ namespace RayCasingKkepProject
                     CeilingTexture = new Bitmap("dem1_5.png");
                     break;
 
+                // 2nd location
                 case 1:
-                    // Локация 1 – другой набор текстур
                     if (!File.Exists("ceil3_3.png") ||
                         !File.Exists("Door.png") ||
                         !File.Exists("W3d_finalgrayflag.png") ||
@@ -53,8 +53,8 @@ namespace RayCasingKkepProject
                     CeilingTexture = new Bitmap("dem1_5.png");
                     break;
 
+                // 3nd location
                 case 2:
-                    // Для остальных локаций можно задать текстуры по умолчанию
                     if(!File.Exists("ceil3_3.png") ||
                         !File.Exists("Door.png") ||
                         !File.Exists("W3d_finalgrayflag.png") ||
@@ -69,8 +69,9 @@ namespace RayCasingKkepProject
                     FloorTexture = new Bitmap("FLAT1_2.png");
                     CeilingTexture = new Bitmap("dem1_5.png");
                     break;
+
+                // 4th location
                 case 3:
-                    // Для остальных локаций можно задать текстуры по умолчанию
                     if (!File.Exists("ceil3_3.png") ||
                         !File.Exists("Door.png") ||
                         !File.Exists("W3d_finalgrayflag.png") ||
