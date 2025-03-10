@@ -69,6 +69,8 @@ namespace RayCasingKkepProject
             {
                 CurrentMapIndex = index;
                 Map.Load(maps[index]);
+                // Обновляем текстуры для данной локации
+                TextureManager.LoadLocationTextures(index);
             }
         }
     }
