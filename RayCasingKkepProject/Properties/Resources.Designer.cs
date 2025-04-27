@@ -59,14 +59,5 @@ namespace RayCasingKkepProject.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на .
-        /// </summary>
-        internal static string Brick {
-            get {
-                return ResourceManager.GetString("Brick", resourceCulture);
-            }
-        }
     }
 }

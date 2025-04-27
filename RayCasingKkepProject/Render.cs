@@ -256,7 +256,6 @@ namespace RayCasingKkepProject
         private void DrawMinimap()
         {
             int cellSize = 10;
-            // Отрисовка клеток карты (как у вас было)
             for (int y = 0; y < Map.Height; y++)
             {
                 for (int x = 0; x < Map.Width; x++)

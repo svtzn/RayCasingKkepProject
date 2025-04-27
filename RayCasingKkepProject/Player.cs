@@ -7,11 +7,16 @@ namespace RayCasingKkepProject
     {
         public float X { get; private set; }
         public float Y { get; private set; }
-        public float Angle { get; private set; } // Угол направления взгляда
-        public float Pitch { get; private set; } // Поворот камеры вверх/вниз
+        public float Angle { get; set; } // Угол направления взгляда
+        public float Pitch { get; set; } // Поворот камеры вверх/вниз
 
-        private const float MoveSpeed = 0.1f; // Скорость движения
+        private const float MoveSpeed = 0.07f; // Скорость движения
         private const float RotationSpeed = 0.05f; // Скорость поворота
+
+        public bool IsMovingForward { get; set; }
+        public bool IsMovingBackward { get; set; }
+        public bool IsStrafingLeft { get; set; }
+        public bool IsStrafingRight { get; set; }
 
         public Player(float startX, float startY, float startAngle)
         {
@@ -19,6 +24,44 @@ namespace RayCasingKkepProject
             Y = startY;
             Angle = startAngle;
             Pitch = 0;
+        }
+
+        public void Update()
+        {
+            float speed = MoveSpeed;
+
+            float moveX = 0;
+            float moveY = 0;
+
+            if (IsMovingForward)
+            {
+                moveX += (float)Math.Cos(Angle) * speed;
+                moveY += (float)Math.Sin(Angle) * speed;
+            }
+            if (IsMovingBackward)
+            {
+                moveX -= (float)Math.Cos(Angle) * speed;
+                moveY -= (float)Math.Sin(Angle) * speed;
+            }
+            if (IsStrafingLeft)
+            {
+                moveX += (float)Math.Sin(Angle) * speed;
+                moveY -= (float)Math.Cos(Angle) * speed;
+            }
+            if (IsStrafingRight)
+            {
+                moveX -= (float)Math.Sin(Angle) * speed;
+                moveY += (float)Math.Cos(Angle) * speed;
+            }
+
+            float newX = X + moveX;
+            float newY = Y + moveY;
+            if (!Map.IsWall((int)newX, (int)newY) &&
+                !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
+            {
+                X = newX;
+                Y = newY;
+            }
         }
 
         public void StrafeLeft()
@@ -30,7 +73,7 @@ namespace RayCasingKkepProject
             if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
             {
                 // Добавлена закрывающая скобка после условия:
-                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY))) 
+                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
                 {
                     X = newX;
                     Y = newY;
@@ -46,7 +89,7 @@ namespace RayCasingKkepProject
 
             if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
             {
-                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY))) 
+                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
                 {
                     X = newX;
                     Y = newY;
@@ -61,7 +104,7 @@ namespace RayCasingKkepProject
 
             if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
             {
-                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY))) 
+                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
                 {
                     X = newX;
                     Y = newY;
@@ -76,7 +119,7 @@ namespace RayCasingKkepProject
 
             if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
             {
-                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY))) 
+                if (!Map.IsWall((int)newX, (int)newY) && !(Map.IsDoor((int)newX, (int)newY) && !Map.IsDoorOpen((int)newX, (int)newY)))
                 {
                     X = newX;
                     Y = newY;
